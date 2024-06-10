@@ -9,12 +9,11 @@ export default function FoodDeletionForm() {
     const [deletionResult, setDeletionResult] = useState("");
 
     const handleSearch = () => {
-        // Realizar la búsqueda en la base de datos y eliminar la comida si se encuentra
         axios.get("https://iiiproyectodisenio-default-rtdb.firebaseio.com/Comidas.json")
         .then(response => {
-            const comida = response.data.find(item => item.category === category && item.nombreComida === foodName);
+            const comidas = Object.entries(response.data).map(([id, comida]) => ({ id, ...comida }));
+            const comida = comidas.find(item => item.category === category && item.nombreComida === foodName);
             if (comida) {
-                // Si se encuentra la comida, proceder con la eliminación
                 axios.delete(`https://iiiproyectodisenio-default-rtdb.firebaseio.com/Comidas/${comida.id}.json`)
                 .then(() => {
                     setDeletionResult(`Comida "${foodName}" de categoría "${category}" eliminada exitosamente.`);
@@ -32,13 +31,12 @@ export default function FoodDeletionForm() {
             setDeletionResult(`Error al buscar la comida: ${error.message}`);
         });
     };
-
+    
     return (
         <div>
-            <button onClick={() => setShowForm(true)}>Buscar y Eliminar Comida</button>
+            <button className= "text-center font-semibold text-2xl py-3" onClick={() => setShowForm(true)}>Delete Meals</button>
             {showForm && (
                 <div>
-                    <h2>Formulario de Búsqueda y Eliminación</h2>
                     <div className="space-y-10">
                         <label  htmlFor="category">Categoría:</label>
                         <input className="input-fieldDelete" id="category" type="text" value={category} onChange={(e) => setCategory(e.target.value)} />

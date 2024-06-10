@@ -80,13 +80,15 @@ export default function Menu() {
     
 
     const handleAddComida = (newComida) => {
-        axios.post('https://iiiproyectodisenio-default-rtdb.firebaseio.com/Comidas.json', newComida)
-            .then(response => {
-                setComidas([...comidas, response.data]);
-                setShowModal(false); // Aquí cerramos el modal después de agregar la comida
-            })
-            .catch(error => console.error(error));
-    };
+    axios.post('https://iiiproyectodisenio-default-rtdb.firebaseio.com/Comidas.json', newComida)
+        .then(response => {
+            const newComidaWithId = { ...newComida, id: response.data.name }; // Almacenar el ID en la nueva comida
+            setComidas([...comidas, newComidaWithId]); // Agregar la nueva comida al estado
+            setShowModal(false); // Cerrar el modal después de agregar la comida
+        })
+        .catch(error => console.error(error));
+};
+
 
     const handleAgregarComida = () => {
         setShowModal(true); // Aquí establecemos showModal en true cuando se hace clic en el botón
